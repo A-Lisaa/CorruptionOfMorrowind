@@ -1,9 +1,9 @@
 ﻿using game.items;
 
 
-namespace game {
+namespace game.beings.npcs {
 
-    public class Character {
+    public class Character : Being {
 
         public abstract class Measurement {
             public int Base { get; set; }
@@ -55,7 +55,7 @@ namespace game {
             public double CurrentFatigue { get; set; }
             public double FatigueP { get => 0.75 + CurrentFatigue / MaxFatigue; }
 
-            public int MaxEncumbrance { get => (Strength.Base * 5); }
+            public int MaxEncumbrance { get => Strength.Base * 5; }
             public double CurrentEncumbrance { get; set; }
             public double EncumbranceP { get => CurrentEncumbrance / MaxEncumbrance; }
 
@@ -209,13 +209,16 @@ namespace game {
             }
         }
 
-        public string Name { get; set; } = "Nerevarin";
+        public override string Name { get; init; }
+        public override int SoulSize { get; } = 100;
         public CharacterAttributes Attributes { get; } = new();
         public CharacterSkills Skills { get; init; }
         protected CharacterInventory Inventory { get; } = new();
 
-        public Character() {
+        public Character(string name) {
             Skills = new(Attributes);
+
+            Name = name;
         }
 
         public void MeleeAttack(Character target) {
@@ -223,12 +226,12 @@ namespace game {
 
             double hitRate = (
                 Skills.BluntWeapon.Full +
-                (Attributes.Agility.Full / 5) +
-                (Attributes.Luck.Full / 10)
+                Attributes.Agility.Full / 5 +
+                Attributes.Luck.Full / 10
             ) * Attributes.FatigueP;
             double evasion = (
-                (target.Attributes.Agility.Full / 5) +
-                (target.Attributes.Luck.Full / 10)
+                target.Attributes.Agility.Full / 5 +
+                target.Attributes.Luck.Full / 10
             ) * target.Attributes.FatigueP;
             double hitChance = (hitRate - evasion) / 100;
 
@@ -250,7 +253,7 @@ namespace game {
 
 
         public bool IsDead {
-            get => (Attributes.CurrentHealth <= 0);
+            get => Attributes.CurrentHealth <= 0;
         }
 
         public void SetDead() {
