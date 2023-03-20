@@ -1,9 +1,8 @@
-﻿using game.beings.npcs;
-using game.items.interfaces;
+﻿using game.items.interfaces;
 
 namespace game.items.weapons {
 
-    public abstract class Melee : Item, IDurability {
+    public abstract record Melee : Item, IDurability {
         //public abstract Character.CharacterSkills.Skill Governor { get; }
 
         public abstract int Chop { get; }
@@ -14,24 +13,26 @@ namespace game.items.weapons {
 
         public int CurrentDurability { get; set; }
         public abstract int MaximumDurability { get; }
-        public double DurabilityP { get => CurrentDurability / MaximumDurability; }
 
-        //public override List<object> Metadata {
+        //public override List<MetadataEntry> Metadata {
         //    get {
-        //        var meta = base.Metadata;
-
+        //        List<MetadataEntry> meta = base.Metadata;
         //        meta.AddRange(
-        //            new List<object>() { $"{CurrentDurability} / {MaximumDurability}" }
+        //            new List<MetadataEntry>() {
+        //                new MetadataEntry(nameof(CurrentDurability), CurrentDurability),
+        //                new MetadataEntry(nameof(MaximumDurability), MaximumDurability)
+        //            }
         //        );
 
         //        return meta;
         //    }
         //}
 
-        protected Melee(int? currentDurability = null) {
-            if (currentDurability != null) {
-                CurrentDurability = MaximumDurability;
-            }
+        protected Melee() {
+            CurrentDurability = MaximumDurability;
+        }
+
+        public virtual void OnAttack() {
         }
     }
 }

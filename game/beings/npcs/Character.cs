@@ -5,65 +5,68 @@ namespace game.beings.npcs {
 
     public class Character : Being {
 
-        public abstract class Measurement {
-            public int Base { get; set; }
-            public int Bonus { get; set; }
-            public int Full { get => Base + Bonus; }
+        public abstract record Measurement {
+            private int @base;
+            private int bonus;
 
-            public override string ToString() {
-                return $"Base={Base}; Bonus={Bonus}; Full={Full}";
-            }
+            public int Base { get => @base; set => @base = (value > 0 ? value : 0); }
+            public int Bonus { get => bonus; set => bonus = (value > 0 ? value : 0); }
+            public int Full { get => Base + Bonus; }
         }
 
-        public class CharacterAttributes {
+        public record CharacterAttributes {
+            private double maxHealth;
+            private double currentHealth;
+            private double magickaModifier = 1;
+            private double maxMagicka;
+            private double currentMagicka;
+            private double currentFatigue;
+            private double currentEncumbrance;
+            private double reputation;
+            private int bounty;
+            private int slaves;
 
-            public class Attribute : Measurement {
+            public record Attribute : Measurement {
 
                 public Attribute() {
                     Base = 20;
-                }
-
-                public static Attribute operator +(Attribute a, int b) {
-                    return new Attribute {
-                        Base = a.Base,
-                        Bonus = a.Bonus + b,
-                    };
                 }
             }
 
             // Primary Attributes
 
-            public Attribute Strength { get; set; } = new Attribute();
-            public Attribute Intelligence { get; set; } = new Attribute();
-            public Attribute Willpower { get; set; } = new Attribute();
-            public Attribute Agility { get; set; } = new Attribute();
-            public Attribute Speed { get; set; } = new Attribute();
-            public Attribute Endurance { get; set; } = new Attribute();
-            public Attribute Personality { get; set; } = new Attribute();
-            public Attribute Luck { get; set; } = new Attribute();
+            public Attribute Strength { get; } = new();
+            public Attribute Intelligence { get; } = new();
+            public Attribute Willpower { get; } = new();
+            public Attribute Agility { get; } = new();
+            public Attribute Speed { get; } = new();
+            public Attribute Endurance { get; } = new();
+            public Attribute Personality { get; } = new();
+            public Attribute Luck { get; } = new();
 
             // Derived Attributes
 
-            public double MaxHealth { get; set; }
-            public double CurrentHealth { get; set; }
+            public double MaxHealth { get => maxHealth; set => maxHealth = (value > 0 ? value : 0); }
+            public double CurrentHealth { get => currentHealth; set => currentHealth = (value > 0 ? value : 0); }
 
-            public double MagickaModifier { get; set; } = 1;
-            public double MaxMagicka { get; set; }
-            public double CurrentMagicka { get; set; }
+            public double MagickaModifier { get => magickaModifier; set => magickaModifier = (value > 0 ? value : 0); }
+            public double MaxMagicka { get => maxMagicka; set => maxMagicka = (value > 0 ? value : 0); }
+            public double CurrentMagicka { get => currentMagicka; set => currentMagicka = (value > 0 ? value : 0); }
 
             public int MaxFatigue { get => Strength.Base + Willpower.Base + Agility.Base + Endurance.Base; }
-            public double CurrentFatigue { get; set; }
-            public double FatigueP { get => 0.75 + CurrentFatigue / MaxFatigue; }
+            public double CurrentFatigue { get => currentFatigue; set => currentFatigue = (value > 0 ? value : 0); }
+            public double FatigueP { get => CurrentFatigue / MaxFatigue; }
+            public double FatiguePFull { get => 0.75 + FatigueP; }
 
             public int MaxEncumbrance { get => Strength.Base * 5; }
-            public double CurrentEncumbrance { get; set; }
+            public double CurrentEncumbrance { get => currentEncumbrance; set => currentEncumbrance = (value > 0 ? value : 0); }
             public double EncumbranceP { get => CurrentEncumbrance / MaxEncumbrance; }
 
             // Other Attributes
 
-            public double Reputation { get; set; }
-            public int Bounty { get; set; }
-            public int Slaves { get; set; }
+            public double Reputation { get => reputation; set => reputation = (value > 0 ? value : 0); }
+            public int Bounty { get => bounty; set => bounty = (value > 0 ? value : 0); }
+            public int Slaves { get => slaves; set => slaves = (value > 0 ? value : 0); }
 
             public CharacterAttributes() {
                 MaxHealth = (double)(Strength.Base + Endurance.Base) / 2;
@@ -73,9 +76,9 @@ namespace game.beings.npcs {
             }
         }
 
-        public class CharacterSkills {
+        public record CharacterSkills {
 
-            public class Skill : Measurement {
+            public record Skill : Measurement {
 
                 public enum Specializations {
                     COMBAT,
@@ -91,62 +94,55 @@ namespace game.beings.npcs {
                     Specialization = specialization;
                     Base = 5;
                 }
-
-                public static Skill operator +(Skill a, int b) {
-                    return new Skill(a.Governor, a.Specialization) {
-                        Base = a.Base,
-                        Bonus = a.Bonus + b,
-                    };
-                }
             }
 
             // Endurance
 
-            public Skill HeavyArmor { get; set; }
-            public Skill MediumArmor { get; set; }
-            public Skill Spear { get; set; }
+            public Skill HeavyArmor { get; }
+            public Skill MediumArmor { get; }
+            public Skill Spear { get; }
 
             // Strength
 
-            public Skill Acrobatics { get; set; }
-            public Skill Armorer { get; set; }
-            public Skill Axe { get; set; }
-            public Skill BluntWeapon { get; set; }
-            public Skill LongBlade { get; set; }
+            public Skill Acrobatics { get; }
+            public Skill Armorer { get; }
+            public Skill Axe { get; }
+            public Skill BluntWeapon { get; }
+            public Skill LongBlade { get; }
 
             // Agility
 
-            public Skill Block { get; set; }
-            public Skill LightArmor { get; set; }
-            public Skill Marksman { get; set; }
-            public Skill Sneak { get; set; }
+            public Skill Block { get; }
+            public Skill LightArmor { get; }
+            public Skill Marksman { get; }
+            public Skill Sneak { get; }
 
             // Speed
 
-            public Skill Athletics { get; set; }
-            public Skill HandToHand { get; set; }
-            public Skill ShortBlade { get; set; }
-            public Skill Unarmored { get; set; }
+            public Skill Athletics { get; }
+            public Skill HandToHand { get; }
+            public Skill ShortBlade { get; }
+            public Skill Unarmored { get; }
 
             // Personality
 
-            public Skill Illusion { get; set; }
-            public Skill Mercantile { get; set; }
-            public Skill Speechcraft { get; set; }
+            public Skill Illusion { get; }
+            public Skill Mercantile { get; }
+            public Skill Speechcraft { get; }
 
             // Intelligence
 
-            public Skill Alchemy { get; set; }
-            public Skill Conjuration { get; set; }
-            public Skill Enchant { get; set; }
-            public Skill Security { get; set; }
+            public Skill Alchemy { get; }
+            public Skill Conjuration { get; }
+            public Skill Enchant { get; }
+            public Skill Security { get; }
 
             // Willpower
 
-            public Skill Alteration { get; set; }
-            public Skill Destruction { get; set; }
-            public Skill Mysticism { get; set; }
-            public Skill Restoration { get; set; }
+            public Skill Alteration { get; }
+            public Skill Destruction { get; }
+            public Skill Mysticism { get; }
+            public Skill Restoration { get; }
 
             public CharacterSkills(CharacterAttributes attributes) {
                 /* Skills */
@@ -201,11 +197,60 @@ namespace game.beings.npcs {
             }
         }
 
-        public class CharacterInventory {
-            private Dictionary<Item, int> _items = new();
+        public record CharacterInventory {
+            private readonly Dictionary<Item, int> _items = new();
+
+            public override string ToString() {
+                return string.Join(
+                    "\n",
+                    _items.Select(x => $"{x.Key} = {x.Value}")
+                );
+            }
+
+            private IEnumerable<Item> ItemLookup(Item item) {
+                var query =
+                    from elem in _items
+                    where elem.Key == item
+                    select elem.Key;
+
+                return query;
+            }
 
             public void AddItem(Item item) {
+                var query = ItemLookup(item);
 
+                if (!query.Any()) {
+                    _items[item] = 1;
+                }
+                else {
+                    _items[item] += 1;
+                }
+            }
+
+            public void RemoveItem(Item item) {
+                var query = ItemLookup(item);
+
+                if (!query.Any()) {
+                    return;
+                }
+
+                _items[item] -= 1;
+
+                if (_items[item] == 0) {
+                    _items.Remove(item);
+                }
+            }
+
+            public void RemoveItemByIndex(int index) {
+                Item item  = _items.ElementAtOrDefault(index).Key;
+
+                if (item != default) {
+                    _items[item] -= 1;
+
+                    if (_items[item] == 0) {
+                        _items.Remove(item);
+                    }
+                }
             }
         }
 
@@ -213,7 +258,7 @@ namespace game.beings.npcs {
         public override int SoulSize { get; } = 100;
         public CharacterAttributes Attributes { get; } = new();
         public CharacterSkills Skills { get; init; }
-        protected CharacterInventory Inventory { get; } = new();
+        public CharacterInventory Inventory { get; } = new();
 
         public Character(string name) {
             Skills = new(Attributes);

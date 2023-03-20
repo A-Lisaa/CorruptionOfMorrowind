@@ -2,7 +2,7 @@
 
 
 namespace game.items.magic.soulGems {
-    public abstract class SoulGem : Item {
+    public abstract record SoulGem : Item {
         protected abstract string BaseName { get; }
         public override string Name { get => SoulName != null ? $"{BaseName} ({SoulName})" : BaseName; }
 

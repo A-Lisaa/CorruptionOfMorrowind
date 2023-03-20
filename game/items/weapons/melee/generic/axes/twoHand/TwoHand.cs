@@ -1,7 +1,5 @@
-﻿namespace game.items.weapons.melee.generic.axes.twoHand
-{
+﻿namespace game.items.weapons.melee.generic.axes.twoHand {
 
-    public abstract class TwoHand : Melee
-    {
+    public abstract record TwoHand : Melee {
     }
 }

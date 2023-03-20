@@ -1,7 +1,7 @@
 ﻿using game.beings;
 
 namespace game.items.magic.soulGems {
-    public class GrandSoulGem : SoulGem {
+    public record GrandSoulGem : SoulGem {
         protected override string BaseName { get; } = "Grand Soul Gem";
         protected override int BaseValue { get; } = 200;
         public override double Weight { get; } = 2;
