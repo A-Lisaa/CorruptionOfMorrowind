@@ -14,20 +14,6 @@ namespace game.items.weapons {
         public int CurrentDurability { get; set; }
         public abstract int MaximumDurability { get; }
 
-        //public override List<MetadataEntry> Metadata {
-        //    get {
-        //        List<MetadataEntry> meta = base.Metadata;
-        //        meta.AddRange(
-        //            new List<MetadataEntry>() {
-        //                new MetadataEntry(nameof(CurrentDurability), CurrentDurability),
-        //                new MetadataEntry(nameof(MaximumDurability), MaximumDurability)
-        //            }
-        //        );
-
-        //        return meta;
-        //    }
-        //}
-
         protected Melee() {
             CurrentDurability = MaximumDurability;
         }

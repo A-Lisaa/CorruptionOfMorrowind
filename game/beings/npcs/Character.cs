@@ -3,7 +3,7 @@
 
 namespace game.beings.npcs {
 
-    public class Character : Being {
+    public record Character : Being {
 
         public abstract record Measurement {
             private int @base;
@@ -197,8 +197,9 @@ namespace game.beings.npcs {
             }
         }
 
-        public record CharacterInventory {
-            private readonly Dictionary<Item, int> _items = new();
+        public class CharacterInventory {
+            // SortedDictionary should probably get Comparer
+            private readonly SortedDictionary<Item, int> _items = new();
 
             public override string ToString() {
                 return string.Join(
@@ -242,7 +243,7 @@ namespace game.beings.npcs {
             }
 
             public void RemoveItemByIndex(int index) {
-                Item item  = _items.ElementAtOrDefault(index).Key;
+                Item item = _items.ElementAtOrDefault(index).Key;
 
                 if (item != default) {
                     _items[item] -= 1;
@@ -254,43 +255,41 @@ namespace game.beings.npcs {
             }
         }
 
-        public override string Name { get; init; }
+        public required override string Name { get; init; }
         public override int SoulSize { get; } = 100;
         public CharacterAttributes Attributes { get; } = new();
         public CharacterSkills Skills { get; init; }
         public CharacterInventory Inventory { get; } = new();
 
-        public Character(string name) {
+        public Character() {
             Skills = new(Attributes);
-
-            Name = name;
         }
 
-        public void MeleeAttack(Character target) {
-            var rand = new Random();
+        //public void MeleeAttack(Character target) {
+        //    var rand = new Random();
 
-            double hitRate = (
-                Skills.BluntWeapon.Full +
-                Attributes.Agility.Full / 5 +
-                Attributes.Luck.Full / 10
-            ) * Attributes.FatigueP;
-            double evasion = (
-                target.Attributes.Agility.Full / 5 +
-                target.Attributes.Luck.Full / 10
-            ) * target.Attributes.FatigueP;
-            double hitChance = (hitRate - evasion) / 100;
+        //    double hitRate = (
+        //        Skills.BluntWeapon.Full +
+        //        Attributes.Agility.Full / 5 +
+        //        Attributes.Luck.Full / 10
+        //    ) * Attributes.FatigueP;
+        //    double evasion = (
+        //        target.Attributes.Agility.Full / 5 +
+        //        target.Attributes.Luck.Full / 10
+        //    ) * target.Attributes.FatigueP;
+        //    double hitChance = (hitRate - evasion) / 100;
 
-            if (rand.NextDouble() < hitChance) {
-                double dmg = 20;//Change
+        //    if (rand.NextDouble() < hitChance) {
+        //        double dmg = 20;//Change
 
-                target.DealDamage(dmg);
+        //        target.DealDamage(dmg);
 
-                Console.WriteLine($"{Name} hit {target.Name} with chance {hitChance} for {dmg}");
-            }
-            else {
-                Console.WriteLine($"{Name} did not hit {target.Name} with chance {hitChance}");
-            }
-        }
+        //        Console.WriteLine($"{Name} hit {target.Name} with chance {hitChance} for {dmg}");
+        //    }
+        //    else {
+        //        Console.WriteLine($"{Name} did not hit {target.Name} with chance {hitChance}");
+        //    }
+        //}
 
         public void DealDamage(double damage) {
             Attributes.CurrentHealth -= damage;

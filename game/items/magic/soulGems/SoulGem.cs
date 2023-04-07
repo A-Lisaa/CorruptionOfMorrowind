@@ -4,17 +4,17 @@
 namespace game.items.magic.soulGems {
     public abstract record SoulGem : Item {
         protected abstract string BaseName { get; }
-        public override string Name { get => SoulName != null ? $"{BaseName} ({SoulName})" : BaseName; }
+        public override string Name { get => SoulName is not null ? $"{BaseName} ({SoulName})" : BaseName; }
 
         protected abstract int BaseValue { get; }
-        public override int Value { get => SoulSize != null ? BaseValue + (int)SoulSize * 5 : BaseValue; }
+        public override int Value { get => SoulSize is not null ? BaseValue + (int)SoulSize * 5 : BaseValue; }
 
         public abstract int Capacity { get; }
         public string? SoulName { get; protected set; }
         public int? SoulSize { get; protected set; }
 
         private void CheckEmptiness() {
-            if (SoulName != null || SoulSize != null) {
+            if (SoulName is not null || SoulSize is not null) {
                 throw new InvalidOperationException(
                     "Soul gem is not empty"
                 );
@@ -31,7 +31,7 @@ namespace game.items.magic.soulGems {
         }
 
         protected SoulGem(Being? creature = null) {
-            if (creature == null) {
+            if (creature is null) {
                 SoulName = null;
                 SoulSize = null;
                 return;

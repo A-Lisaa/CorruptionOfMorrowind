@@ -2,3 +2,15 @@
 
 # S125: Sections of code should not be commented out
 dotnet_diagnostic.S125.severity = none
+
+# CA2109: Проверьте видимые обработчики событий
+dotnet_diagnostic.CA2109.severity = none
+
+# CA1003: Используйте экземпляры обработчика универсальных событий
+dotnet_diagnostic.CA1003.severity = none
+
+# CA1305: Укажите IFormatProvider
+dotnet_diagnostic.CA1305.severity = none
+
+# CA1307: Используйте StringComparison, чтобы ясно указать намерение.
+dotnet_diagnostic.CA1307.severity = none

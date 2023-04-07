@@ -1,9 +1,4 @@
-﻿using game.beings.npcs;
-using game.items.interfaces;
-using game.items.junk;
-using game.items.weapons.melee.generic.axes.oneHand;
-using Serilog;
-using Serilog.Events;
+﻿using Serilog.Events;
 
 namespace game {
     public static class Program {
