@@ -1,5 +1,4 @@
-﻿using game.beings;
-using game.items.magic.soulGems.interfaces;
+﻿using game.items.magic.soulGems.interfaces;
 
 namespace game.items.magic.soulGems {
     public record AzuraStarSoulGem : SoulGem, IIndestructibleSoulGem {
@@ -8,12 +7,8 @@ namespace game.items.magic.soulGems {
         public override double Weight { get; } = 2;
         public override int Capacity { get; } = 15000;
 
-        public AzuraStarSoulGem(Being? creature = null) : base(creature) {
-        }
-
         public void RemoveSoul() {
-            SoulName = null;
-            SoulSize = null;
+            Soul = null;
         }
     }
 }

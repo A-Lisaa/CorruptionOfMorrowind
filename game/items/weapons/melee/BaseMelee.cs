@@ -1,8 +1,7 @@
 ﻿using game.items.interfaces;
 
 namespace game.items.weapons {
-
-    public abstract record Melee : Item, IDurability {
+    public abstract record BaseMelee : Item, IDurability {
         //public abstract Character.CharacterSkills.Skill Governor { get; }
 
         public abstract int Chop { get; }
@@ -14,7 +13,7 @@ namespace game.items.weapons {
         public int CurrentDurability { get; set; }
         public abstract int MaximumDurability { get; }
 
-        protected Melee() {
+        protected BaseMelee() {
             CurrentDurability = MaximumDurability;
         }
 

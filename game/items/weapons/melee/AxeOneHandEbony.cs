@@ -1,5 +1,7 @@
-﻿namespace game.items.weapons.melee.generic.axes.oneHand {
-    public record AxeOneHandEbony : OneHand {
+﻿namespace game.items.weapons.melee
+{
+    public record AxeOneHandEbony : OneHand
+    {
         public override int Chop => 19;
 
         public override int Thrust => 3;
@@ -14,7 +16,8 @@
 
         public override int Value => 15_000;
 
-        public AxeOneHandEbony() : base() {
+        public AxeOneHandEbony() : base()
+        {
         }
     }
 }

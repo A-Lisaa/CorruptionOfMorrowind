@@ -1,5 +1,4 @@
 ﻿namespace game.items {
-
     public abstract record Item {
         public abstract string Name { get; }
         public abstract double Weight { get; }
