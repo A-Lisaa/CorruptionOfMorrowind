@@ -1,8 +1,14 @@
 ﻿using game.items;
 using game.interfaces;
-using utils.extensions;
 
 namespace game {
+    public record Descriptor {
+#pragma warning disable CA1002
+        public List<string> Nouns { get; } = new List<string>();
+        public List<string> Adjectives { get; } = new List<string>();
+#pragma warning restore CA1002
+    }
+
     public abstract record Measurement {
         private int @base;
         private int bonus;
@@ -35,14 +41,7 @@ namespace game {
         }
     }
 
-    public sealed record Descriptor {
-#pragma warning disable CA1002
-        public List<string> Nouns { get; } = new List<string>();
-        public List<string> Adjectives { get; } = new List<string>();
-#pragma warning restore CA1002
-    }
-
-    public class ItemComparer : Comparer<Item> {
+    public sealed class ItemComparer : Comparer<Item> {
         public override int Compare(Item? x, Item? y) {
             //if (x is not null && y is not null) {
             //    return x.Name.CompareTo(y.Name);
@@ -89,7 +88,7 @@ namespace game {
         }
     }
 
-    public sealed record Character : Unique<Character>, ISoulfulCreature {
+    public record Character : Unique<Character>, ISoulfulCreature {
         public enum Genders {
             Male,
             Female,
@@ -207,10 +206,10 @@ namespace game {
         public CharacterSkill Restoration { get; init; }
         #endregion
 
-        #region Appearance
-        public Descriptor Race { get; set; } = new();
-        public Descriptor Head { get; set; } = new();
-        #endregion
+        //#region Appearance
+        //public Descriptor Race { get; set; } = new();
+        //public Descriptor Head { get; set; } = new();
+        //#endregion
 
         public required string Name { get; set; }
         public required Genders Gender { get; init; }
@@ -226,7 +225,7 @@ namespace game {
         public override Dictionary<string, Character> ContainingDict() => World.Characters;
 
         public Character() {
-            #region Attributes Setting
+            #region Attributes Initialization
             CurrentHealth = MaxHealth;
             CurrentMagicka = MaxMagicka;
             CurrentFatigue = MaxFatigue;
@@ -283,9 +282,9 @@ namespace game {
         }
 
         public void Move(Room destination) {
-            CurrentRoom.Leave.Invoke(this);
+            CurrentRoom.Leave(this);
             CurrentRoom = destination;
-            CurrentRoom.Enter.Invoke(this);
+            CurrentRoom.Enter(this);
         }
 
         public void TakeDamage(double damage) {

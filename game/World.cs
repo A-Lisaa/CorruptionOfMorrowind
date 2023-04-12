@@ -10,6 +10,9 @@ namespace game {
         public static Dictionary<string, Room> Rooms { get; } = new();
 
         [Saveable]
+        public static Dictionary<string, Location> Locations { get; } = new();
+
+        [Saveable]
         public static Dictionary<string, Being> Beings { get; } = new();
 
         [Saveable]
@@ -32,7 +35,10 @@ namespace game {
 
             return JsonConvert.SerializeObject(
                 result.ToDictionary(x => x.Name, x => x.Value),
-                Formatting.Indented
+                Formatting.Indented,
+                new JsonSerializerSettings {
+                    PreserveReferencesHandling = PreserveReferencesHandling.All
+                }
             );
         }
 

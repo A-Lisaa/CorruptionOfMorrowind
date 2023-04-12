@@ -4,7 +4,6 @@ using utils.logger;
 
 namespace game {
     public static class Program {
-        // TODO: Rewrite all the ToString's, so they have nice output with class name and public properties, should have tabs
         // TODO: Delegates shouldn't be serialized, maybe just make a class (partial?) with all the events
         // (and maybe dict with their names or some other way to get them through serialized string or something)
         // TODO: Saving of objects
@@ -12,8 +11,6 @@ namespace game {
             Character mc = new() { Name = "Alice", Gender = Character.Genders.Female };
             mc.Register("mc");
             Character kas = new() { Name = "Kasyrra", Gender = Character.Genders.Herm };
-            kas.Race.Nouns.Add("demon");
-            kas.Race.Adjectives.Add("demonic");
             kas.Register("kas");
             Room room1 = new() {
                 Name = "Room 1"
@@ -22,7 +19,7 @@ namespace game {
             Room room2 = new() {
                 Name = "Room 2"
             };
-            room2.Register("room2");
+            room2.Register("");
         }
 
         public static void Unregister() {
@@ -31,18 +28,19 @@ namespace game {
         }
 
         public static void Subscribe() {
-            World.Rooms["room1"].Sleep.Subscribe("change_invokers_name_to_Succubus", (invoker) => invoker.Name = "Succubus");
-            World.Rooms["room1"].Sleep.Subscribe("add_100_hp_to_kasyrras_maximum", (_) => World.Characters["kas"].MaxHealth += 100);
+            World.Rooms["room1"].OnSleep += RoomEvents.ChangeInvokerNameToSuccubus;
+            World.Rooms["room1"].OnSleep += RoomEvents.Add100HpToKasyrrasMaximum;
         }
 
         public static void Unsubscribe() {
-            World.Rooms["room1"].Sleep.Unsubscribe("change_invokers_name_to_Succubus");
+            World.Rooms["room1"].OnSleep -= RoomEvents.ChangeInvokerNameToSuccubus;
+            World.Rooms["room1"].OnSleep += RoomEvents.SetInvokerIntelliigenceTo100;
         }
 
         public static void DoInvokes() {
-            World.Rooms["room1"].Sleep.Invoke(World.Characters["mc"]);
+            World.Rooms["room1"].Sleep(World.Characters["mc"]);
             Unsubscribe();
-            World.Rooms["room1"].Sleep.Invoke(World.Characters["kas"]);
+            World.Rooms["room1"].Sleep(World.Characters["kas"]);
         }
 
         private static void Main(string[] args) {
@@ -51,6 +49,8 @@ namespace game {
             if (Log.IsEnabled(LogEventLevel.Debug)) {
                 Log.Information("Debug enabled");
             }
+
+            AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) => Log.Error((Exception)eventArgs.ExceptionObject, "Unhandled Exception");
 
             Register();
             Subscribe();

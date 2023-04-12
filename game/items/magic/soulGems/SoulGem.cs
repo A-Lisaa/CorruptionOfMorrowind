@@ -11,20 +11,26 @@ namespace game.items.magic.soulGems {
         public abstract int Capacity { get; }
         public ISoulfulCreature? Soul { get; protected set; }
 
-        public void AddSoul(ISoulfulCreature creature) {
+        /// <summary>
+        /// Traps <paramref name="creature"/> in the soul gem.
+        /// </summary>
+        /// <param name="creature">Creature to be trapped in the soul gem.</param>
+        /// <returns>true if succesful, otherwise false</returns>
+        public bool AddSoul(ISoulfulCreature creature) {
             if (creature is null) {
-                return;
+                return false;
             }
             if (Soul is not null) {
                 Log.Error($"Soul gem {this} is not empty");
-                return;
+                return false;
             }
             if (creature.SoulSize > Capacity) {
-                Log.Error($"Soul of {creature} is larger than osul gem {this} capacity");
-                return;
+                Log.Error($"Soul of {creature} is larger than soul gem {this} capacity");
+                return false;
             }
 
             Soul = creature;
+            return true;
         }
     }
 }
