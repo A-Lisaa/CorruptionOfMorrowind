@@ -1,25 +1,24 @@
 ﻿using System.Drawing;
 
 namespace game {
+#pragma warning disable S2094
+    public class RoomEventArgs : GameEventArgs {
+    }
+#pragma warning restore S2094
+
     public static partial class RoomEvents {
-        public static void ChangeInvokerNameToSuccubus(Character invoker) {
-            if (invoker is null) {
-                throw new ArgumentNullException(nameof(invoker));
-            }
-            invoker.Name = "Succubus";
+        public static void ChangeInvokerNameToSuccubus(object? sender, RoomEventArgs args) {
+            args.Invoker.Name = "Succubus";
         }
 
-        public static void Add100HpToKasyrrasMaximum(Character _) {
+        public static void Add100HpToKasyrrasMaximum(object? _, RoomEventArgs args) {
             World.Characters["kas"].MaxHealth += 100;
         }
     }
 
     public static partial class RoomEvents {
-        public static void SetInvokerIntelliigenceTo100(Character invoker) {
-            if (invoker is null) {
-                throw new ArgumentNullException(nameof(invoker));
-            }
-            invoker.Intelligence.Base = 100;
+        public static void SetInvokerIntelliigenceTo100(object? sender, RoomEventArgs args) {
+            args.Invoker.Intelligence.Base = 100;
         }
     }
 
@@ -34,23 +33,28 @@ namespace game {
         public List<RoomGroup> Groups { get; } = new();
 #pragma warning restore CA1002
 
+        // TODO: Passages to other Rooms and, maybe, to non-Room locations (or Room locations not in Location)
+
         public override Dictionary<string, Room> ContainingDict() => World.Rooms;
 
-        // TODO: Joint events (maybe, static?)
-        public event Action<Character>? OnEnter;
-        public event Action<Character>? OnLeave;
-        public event Action<Character>? OnSleep;
+        // TODO: Joint events (in Group?)
+        [GameEvent]
+        public event EventHandler<RoomEventArgs>? OnEnter;
+        [GameEvent]
+        public event EventHandler<RoomEventArgs>? OnLeave;
+        [GameEvent]
+        public event EventHandler<RoomEventArgs>? OnSleep;
 
         public void Enter(Character invoker) {
-            OnEnter?.Invoke(invoker);
+            OnEnter?.Invoke(this, new RoomEventArgs() { Invoker = invoker });
         }
 
         public void Leave(Character invoker) {
-            OnLeave?.Invoke(invoker);
+            OnLeave?.Invoke(this, new RoomEventArgs() { Invoker = invoker });
         }
 
         public void Sleep(Character invoker) {
-            OnSleep?.Invoke(invoker);
+            OnSleep?.Invoke(this, new RoomEventArgs() { Invoker = invoker });
         }
     }
 }

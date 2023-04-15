@@ -22,7 +22,15 @@ namespace game {
             _id = id;
             bool result = ContainingDict().TryAdd(_id, (T)this);
             if (!result) {
-                Log.Error($"Couldn't register {this}, likely reason: object with this id is already registered");
+                //Log.Error($"Couldn't register {this}, likely reason: object with this id is already registered");
+                Log.Error(
+                    new LogMessage(
+                        "Can't register [object]",
+                        "Object of the same type with [id] already registered",
+                        ("object", this),
+                        ("id", id)
+                    )
+                );
             }
         }
 

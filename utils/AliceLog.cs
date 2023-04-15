@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 
 using Serilog;
-using Serilog.Exceptions;
 using Newtonsoft.Json;
 
 namespace utils.logger {
@@ -10,7 +9,6 @@ namespace utils.logger {
             string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
 
             var loggerConfiguration = new LoggerConfiguration()
-                .Enrich.WithExceptionDetails()
                 .WriteTo.File($"logs/{timestamp}.log", retainedFileCountLimit: 5);
 
 #if DEBUG

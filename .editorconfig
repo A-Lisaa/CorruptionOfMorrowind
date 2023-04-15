@@ -7,7 +7,7 @@ dotnet_diagnostic.S125.severity = none
 dotnet_diagnostic.CA2109.severity = none
 
 # CA1003: Используйте экземпляры обработчика универсальных событий
-dotnet_diagnostic.CA1003.severity = none
+# dotnet_diagnostic.CA1003.severity = none
 
 # CA1305: Укажите IFormatProvider
 dotnet_diagnostic.CA1305.severity = none
@@ -17,3 +17,7 @@ dotnet_diagnostic.CA1307.severity = none
 
 # CA1310: Используйте StringComparison, чтобы правильно указать намерение.
 dotnet_diagnostic.CA1310.severity = none
+
+# CA1062: Проверьте аргументы или открытые методы.
+# CA1062 all the events must have GameEventAttribute checking if args is not null, and CA1062 still triggers with the attribute.
+dotnet_code_quality.CA1062.excluded_type_names_with_derived_types = RoomEvents

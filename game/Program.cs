@@ -10,6 +10,7 @@ namespace game {
         public static void Register() {
             Character mc = new() { Name = "Alice", Gender = Character.Genders.Female };
             mc.Register("mc");
+            mc.Register("mc");
             Character kas = new() { Name = "Kasyrra", Gender = Character.Genders.Herm };
             kas.Register("kas");
             Room room1 = new() {
@@ -55,15 +56,13 @@ namespace game {
             Register();
             Subscribe();
 
-            World.Print();
-
             DoInvokes();
 
-            World.Print();
+            Console.WriteLine(World.Characters["mc"].Name);
+            Console.WriteLine(World.Characters["kas"].Name);
+            Console.WriteLine(World.Characters["kas"].MaxHealth);
 
             Unregister();
-
-            World.Print();
         }
     }
 }
