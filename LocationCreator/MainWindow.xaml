@@ -4,18 +4,39 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LocationCreator"
+        xmlns:lang="clr-namespace:LocationCreator.Properties.Lang"
         mc:Ignorable="d"
-        Title="Location Creator" Height="450" Width="800">
+        Title="{x:Static lang:Lang.Window_Title}" Height="450" Width="800"
+        KeyDown="Window_KeyDown">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <GridSplitter Height="3" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="Top"/>
-        <Button Content="Button" HorizontalAlignment="Center" Height="64" Grid.Row="1" VerticalAlignment="Center" Width="148"/>
+        <Menu x:Name="StatusBar" VerticalAlignment="Top" Background="#FFC3C3C3" Panel.ZIndex="9999">
+            <MenuItem Header="{x:Static lang:Lang.StatusBar_File}">
+                <MenuItem x:Name="StatusBar_File_New" Command="New">
+                    <MenuItem.CommandBindings>
+                        <CommandBinding Command="New" Executed="StatusBar_File_New_Executed"/>
+                    </MenuItem.CommandBindings>
+                </MenuItem>
+                <MenuItem x:Name="StatusBar_File_Open" Command="Open">
+                    <MenuItem.CommandBindings>
+                        <CommandBinding Command="Open" Executed="StatusBar_File_Open_Executed"/>
+                    </MenuItem.CommandBindings>
+                </MenuItem>
+                <MenuItem x:Name="StatusBar_File_Save" Command="Save">
+                    <MenuItem.CommandBindings>
+                        <CommandBinding Command="Save" Executed="StatusBar_File_Save_Executed"/>
+                    </MenuItem.CommandBindings>
+                </MenuItem>
+                <MenuItem x:Name="StatusBar_File_Settings" Header="{x:Static lang:Lang.StatusBar_File_Settings}">
+                    <MenuItem x:Name="StatusBar_File_Settings_Languages" Header="{x:Static lang:Lang.StatusBar_File_Settings_Languages}"/>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <Canvas x:Name="MainCanvas" MouseDown="MainCanvas_MouseDown" ContextMenuOpening="MainCanvas_ContextMenuOpening" Background="#00000000">
+            <Canvas.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="MainCanvas_ContextMenu_AddRoom" Header="{x:Static lang:Lang.MainCanvas_ContextMenu_AddRoom}" Click="MainCanvas_ContextMenu_AddRoom_Click"/>
+                </ContextMenu>
+            </Canvas.ContextMenu>
+        </Canvas>
     </Grid>
 </Window>

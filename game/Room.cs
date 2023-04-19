@@ -24,18 +24,37 @@ namespace game {
 
     public record RoomGroup {
         public required string Name { get; set; }
-        public Color Color { get; set; } = Color.White;
+    }
+
+    public record Passage {
+        public required Room Destination { get; set; }
+        public required int Time { get; set; }
+
+        [GameEvent]
+        public event EventHandler<RoomEventArgs>? OnEnter;
+
+        public void Enter(Character invoker) {
+            OnEnter?.Invoke(this, new RoomEventArgs() { Invoker = invoker });
+        }
     }
 
     public record Room : Unique<Room> {
         public required string Name { get; set; }
+        public string Description { get; set; } = "";
 #pragma warning disable CA1002
         public List<RoomGroup> Groups { get; } = new();
 #pragma warning restore CA1002
 
-        // TODO: Passages to other Rooms and, maybe, to non-Room locations (or Room locations not in Location)
-
-        public override Dictionary<string, Room> ContainingDict() => World.Rooms;
+        #region Passages
+        public Passage? North { get; set; }
+        public Passage? NorthEast { get; set; }
+        public Passage? East { get; set; }
+        public Passage? SouthEast { get; set; }
+        public Passage? South { get; set; }
+        public Passage? SouthWest { get; set; }
+        public Passage? West { get; set; }
+        public Passage? NorthWest { get; set; }
+        #endregion
 
         // TODO: Joint events (in Group?)
         [GameEvent]
@@ -44,6 +63,8 @@ namespace game {
         public event EventHandler<RoomEventArgs>? OnLeave;
         [GameEvent]
         public event EventHandler<RoomEventArgs>? OnSleep;
+
+        public override Dictionary<string, Room> ContainingDict() => World.Rooms;
 
         public void Enter(Character invoker) {
             OnEnter?.Invoke(this, new RoomEventArgs() { Invoker = invoker });
