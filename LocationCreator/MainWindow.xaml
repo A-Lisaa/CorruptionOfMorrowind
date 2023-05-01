@@ -6,24 +6,23 @@
         xmlns:local="clr-namespace:LocationCreator"
         xmlns:lang="clr-namespace:LocationCreator.Properties.Lang"
         mc:Ignorable="d"
-        Title="{x:Static lang:Lang.Window_Title}" Height="450" Width="800"
-        KeyDown="Window_KeyDown">
+        Title="{x:Static lang:Lang.Window_Title}" Height="450" Width="800">
     <Grid>
         <Menu x:Name="StatusBar" VerticalAlignment="Top" Background="#FFC3C3C3" Panel.ZIndex="9999">
             <MenuItem Header="{x:Static lang:Lang.StatusBar_File}">
                 <MenuItem x:Name="StatusBar_File_New" Command="New">
                     <MenuItem.CommandBindings>
-                        <CommandBinding Command="New" Executed="StatusBar_File_New_Executed"/>
+                        <CommandBinding Command="New" CanExecute="StatusBar_File_New_CanExecute" Executed="StatusBar_File_New_Executed"/>
                     </MenuItem.CommandBindings>
                 </MenuItem>
                 <MenuItem x:Name="StatusBar_File_Open" Command="Open">
                     <MenuItem.CommandBindings>
-                        <CommandBinding Command="Open" Executed="StatusBar_File_Open_Executed"/>
+                        <CommandBinding Command="Open" CanExecute="StatusBar_File_Open_CanExecute" Executed="StatusBar_File_Open_Executed"/>
                     </MenuItem.CommandBindings>
                 </MenuItem>
                 <MenuItem x:Name="StatusBar_File_Save" Command="Save">
                     <MenuItem.CommandBindings>
-                        <CommandBinding Command="Save" Executed="StatusBar_File_Save_Executed"/>
+                        <CommandBinding Command="Save" CanExecute="StatusBar_File_Save_CanExecute" Executed="StatusBar_File_Save_Executed"/>
                     </MenuItem.CommandBindings>
                 </MenuItem>
                 <MenuItem x:Name="StatusBar_File_Settings" Header="{x:Static lang:Lang.StatusBar_File_Settings}">

@@ -13,14 +13,42 @@ using System.Globalization;
 using System.Resources;
 using System;
 using LocationCreator.Properties.Lang;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace LocationCreator {
+    public record RoomVisual : Room {
+        public required Rectangle View { get; set; }
+        public required Point Position { get; set; }
+    }
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
         private Point contextMenuPos;
-        private readonly List<Rectangle> rectangles = new();
+        private readonly ObservableCollection<RoomVisual> rooms = new();
+
+        private void UpdateCanvas(object? sender, NotifyCollectionChangedEventArgs e) {
+            MainCanvas.Children.Clear();
+            foreach (RoomVisual room in rooms) {
+                MainCanvas.Children.Add(room.View);
+                room.View.SetValue(Canvas.TopProperty, room.Position.Y);
+                room.View.SetValue(Canvas.LeftProperty, room.Position.X);
+            }
+            //switch (e.Action) {
+            //    case NotifyCollectionChangedAction.Add:
+            //        if (e.NewItems is not null) {
+            //            foreach (RoomVisual room in e.NewItems) {
+            //                Canvas.SetTop(room.View, room.Position.Y);
+            //                Canvas.SetLeft(room.View, room.Position.X);
+            //            }
+            //        }
+            //        break;
+            //    case NotifyCollectionChangedAction.Remove:
+            //        break;
+            //}
+        }
 
         private static List<CultureInfo> GetAvailableCultures() {
             ResourceManager resourceManager = new ResourceManager(typeof(Lang));
@@ -49,6 +77,7 @@ namespace LocationCreator {
         public MainWindow() {
             InitializeComponent();
             InitializeCultureSettings();
+            rooms.CollectionChanged += UpdateCanvas;
         }
 
         private void AddRoom(Point position) {
@@ -60,19 +89,19 @@ namespace LocationCreator {
                 Fill = Brushes.Fuchsia
             };
 
-            MainCanvas.Children.Add(rectangle);
-            Canvas.SetTop(rectangle, position.Y - (size.Width/2));
-            Canvas.SetLeft(rectangle, position.X - (size.Width/2));
-            rectangles.Add(rectangle);
+            rooms.Add(new RoomVisual() { Name = "Room", View = rectangle, Position = position});
         }
 
         private void MainCanvas_ContextMenu_AddRoom_Click(object sender, RoutedEventArgs e) {
-            AddRoom(contextMenuPos);
+            Point position = new Point(contextMenuPos.X - 25, contextMenuPos.Y - 25);
+            AddRoom(position);
         }
 
         private void MainCanvas_MouseDown(object sender, MouseButtonEventArgs e) {
             if (e.ChangedButton == MouseButton.Left && e.ClickCount == 2) {
-                AddRoom(e.GetPosition(MainCanvas));
+                Point clickPosition = e.GetPosition(MainCanvas);
+                Point position = new Point(clickPosition.X - 25, clickPosition.Y - 25);
+                AddRoom(position);
             }
         }
 
@@ -82,10 +111,10 @@ namespace LocationCreator {
 
         private void ToJson() {
             var json =
-                from rectangle in rectangles
+                from room in rooms
                 select new Dictionary<string, object>() {
-                    { "X", Canvas.GetLeft(rectangle) },
-                    { "Y", Canvas.GetTop(rectangle) },
+                    { "X", room.Position.X },
+                    { "Y", room.Position.Y },
                 };
             using StreamWriter writer = new("rectangles.json");
             writer.Write(JsonConvert.SerializeObject(json));
@@ -98,30 +127,14 @@ namespace LocationCreator {
             if (rects is null) {
                 return;
             }
-            rectangles.Clear();
+            rooms.Clear();
             foreach (var rectangle_dict in rects) {
                 AddRoom(new Point((double)rectangle_dict["X"], (double)rectangle_dict["Y"]));
             }
         }
 
-        private void Window_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyboardDevice.Modifiers == ModifierKeys.Control) {
-                switch (e.Key) {
-                    case Key.S: {
-                        ToJson();
-                        break;
-                    }
-                    case Key.O: {
-                        FromJson();
-                        break;
-                    }
-                }
-            }
-        }
-
         private void StatusBar_File_New_Executed(object sender, ExecutedRoutedEventArgs e) {
-            rectangles.Clear();
-            MainCanvas.Children.Clear();
+            rooms.Clear();
         }
 
         private void StatusBar_File_Open_Executed(object sender, RoutedEventArgs e) {
@@ -130,6 +143,18 @@ namespace LocationCreator {
 
         private void StatusBar_File_Save_Executed(object sender, RoutedEventArgs e) {
             ToJson();
+        }
+
+        private void StatusBar_File_New_CanExecute(object sender, CanExecuteRoutedEventArgs e) {
+            e.CanExecute = true;
+        }
+
+        private void StatusBar_File_Open_CanExecute(object sender, CanExecuteRoutedEventArgs e) {
+            e.CanExecute = true;
+        }
+
+        private void StatusBar_File_Save_CanExecute(object sender, CanExecuteRoutedEventArgs e) {
+            e.CanExecute = true;
         }
     }
 }
